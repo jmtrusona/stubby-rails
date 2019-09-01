@@ -25,6 +25,12 @@ RUN bundle install --without development test
 
 COPY . .
 
-ENTRYPOINT ["puma", "-C", "config/puma.rb", "-p", "8080" ]
+COPY scripts/rpush-stub.sh /usr/local/bin/rpush
+COPY scripts/bundle-stub.sh /usr/local/bin/bundle
+
+ADD docker-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+CMD ["puma", "-C", "config/puma.rb", "-p", "8080" ]
 
 EXPOSE 8080
