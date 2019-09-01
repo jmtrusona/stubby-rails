@@ -2,7 +2,7 @@ FROM ruby:2.6.3-slim
 
 RUN apt-get update
 RUN apt-get -y -qq upgrade
-RUN apt-get -y -qq install libpq-dev python-pip python-dev jq curl git
+RUN apt-get -y -qq install libpq-dev python-pip python-dev jq curl git libsqlite3-dev
 
 # for node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
@@ -24,7 +24,6 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle install --without development test
 
 COPY . .
-RUN bundle exec rake assets:precompile
 
 ENTRYPOINT ["puma", "-C", "config/puma.rb", "-p", "8080" ]
 
