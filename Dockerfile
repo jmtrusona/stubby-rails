@@ -1,4 +1,8 @@
-FROM quay.io/lighthauz/ruby:2.6.3
+FROM ruby:2.6.3-slim
+
+RUN apt-get update
+RUN apt-get -y -qq upgrade
+RUN apt-get -y -qq install libpq-dev python-pip python-dev jq curl git
 
 # for node
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
@@ -22,9 +26,6 @@ RUN bundle install --without development test
 COPY . .
 RUN bundle exec rake assets:precompile
 
-ADD docker-entrypoint.sh /usr/local/bin/
-
-ENTRYPOINT [ "docker-entrypoint.sh" ]
-CMD ["puma", "-C", "config/puma.rb", "-p", "8080" ]
+ENTRYPOINT ["puma", "-C", "config/puma.rb", "-p", "8080" ]
 
 EXPOSE 8080
